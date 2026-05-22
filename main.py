@@ -130,7 +130,7 @@ async def app_lifespan(server: FastMCP):
 
     try:
         # Initialize DB Manager
-        db_manager = DBManager(os.path.join(project_root, "codebadger.db"))
+        db_manager = DBManager(os.getenv("DB_ABS_FILE"))
 
         logger.info("DB Manager initialized")
 
