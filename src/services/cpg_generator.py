@@ -9,6 +9,7 @@ import re
 import subprocess
 from typing import AsyncIterator, Dict, Optional
 
+from .joern_server_manager import config
 from ..exceptions import CPGGenerationError
 from ..models import CPGConfig, Config
 from ..telemetry import get_tracer
@@ -287,7 +288,7 @@ class CPGGenerator:
                 docker_cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout
+                timeout=config.query.timeout
             )
             
             logger.info(f"Docker exec return code: {result.returncode}")

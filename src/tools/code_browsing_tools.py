@@ -12,6 +12,7 @@ from pydantic import Field
 from ..exceptions import (
             ValidationError,
 )
+from ..services.joern_server_manager import config
 from ..utils.validators import validate_codebase_hash
 from .queries import QueryLoader
 
@@ -217,7 +218,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=10,
             )
 
@@ -461,7 +462,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=120,
+                timeout=config.query.timeout,
                 limit=500,
             )
 
@@ -608,7 +609,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=stats_query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=1,
             )
 
@@ -893,7 +894,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query.strip(),
-                timeout=timeout or 30,
+                timeout=config.query.timeout,
                 limit=None,
             )
 
@@ -997,7 +998,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
             )
 
             if result.success and result.data:
@@ -1186,7 +1187,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=max_nodes,
             )
 
@@ -1265,7 +1266,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=limit,
             )
 
@@ -1360,7 +1361,7 @@ Examples:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=50,
             )
 

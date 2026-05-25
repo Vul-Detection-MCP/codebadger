@@ -11,6 +11,7 @@ from pydantic import Field
 from ..exceptions import (
             ValidationError,
 )
+from ..services.joern_server_manager import config
 from ..utils.validators import validate_codebase_hash
 from .queries import QueryLoader
 
@@ -373,7 +374,7 @@ def _find_taint_flows_auto(
             codebase_hash=codebase_hash,
             cpg_path=codebase_info.cpg_path,
             query=query,
-            timeout=timeout,
+            timeout=config.query.timeout,
         )
 
         if not result.success:
@@ -477,7 +478,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=30,
+                    timeout=config.query.timeout,
                     limit=limit,
                 )
 
@@ -602,7 +603,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=30,
+                    timeout=config.query.timeout,
                     limit=limit,
                 )
 
@@ -757,7 +758,7 @@ Examples:
                     sanitizer_patterns=sanitizer_patterns,
                     filename=filename,
                     max_results=max_results,
-                    timeout=timeout if timeout != 120 else 300,  # default to 300s for auto mode (large codebases need more time)
+                    timeout=config.query.timeout,
                 )
 
             # --- MANUAL MODE ---
@@ -881,7 +882,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -998,7 +999,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1103,7 +1104,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=60,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1195,7 +1196,7 @@ Notes:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1280,7 +1281,7 @@ Returns:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1376,7 +1377,7 @@ Notes:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1474,7 +1475,7 @@ Notes:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
 
                 if not result.success:
@@ -1556,7 +1557,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
                 if not result.success:
                     return f"Error: {result.error}"
@@ -1637,7 +1638,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
                 if not result.success:
                     return f"Error: {result.error}"
@@ -1717,7 +1718,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
                 if not result.success:
                     return f"Error: {result.error}"
@@ -1795,7 +1796,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
                 if not result.success:
                     return f"Error: {result.error}"
@@ -1851,7 +1852,7 @@ Examples:
         codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
-        timeout: Annotated[int, Field(description="Query timeout in seconds")] = 240,
+        timeout: Annotated[int, Field(description="Query timeout in seconds")] = config.query.timeout,
     ) -> str:
         """Detect uninitialized variable reads (CWE-457) in the codebase."""
         try:
@@ -1876,7 +1877,7 @@ Examples:
                     codebase_hash=codebase_hash,
                     cpg_path=codebase_info.cpg_path,
                     query=query,
-                    timeout=timeout,
+                    timeout=config.query.timeout,
                 )
                 if not result.success:
                     return f"Error: {result.error}"

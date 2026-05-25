@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
 from ..models import QueryResult
 from ..exceptions import QueryExecutionError
 from ..telemetry import get_tracer
-from .joern_server_manager import JoernServerManager
+from .joern_server_manager import JoernServerManager, config
 
 if TYPE_CHECKING:
     from .joern_client import JoernServerClient
@@ -28,7 +28,7 @@ class QueryExecutor:
         codebase_hash: str,
         cpg_path: str,
         query: str,
-        timeout: int = 30,
+        timeout: int = config.query.timeout,
         limit: Optional[int] = None,
     ) -> QueryResult:
         """Execute a CPGQL query using the Joern server for the specific codebase"""

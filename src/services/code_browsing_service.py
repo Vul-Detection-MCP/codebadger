@@ -1,6 +1,8 @@
 import logging
 import os
 from typing import Any, Dict, Optional, List
+
+from .joern_server_manager import config
 from ..exceptions import ValidationError
 from ..utils.validators import validate_codebase_hash
 
@@ -79,7 +81,7 @@ class CodeBrowsingService:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=query_limit,
             )
 
@@ -301,7 +303,7 @@ class CodeBrowsingService:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=query_limit,
             )
 
@@ -373,7 +375,7 @@ class CodeBrowsingService:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=limit,
             )
 
@@ -432,7 +434,7 @@ class CodeBrowsingService:
                 codebase_hash=codebase_hash,
                 cpg_path=codebase_info.cpg_path,
                 query=query,
-                timeout=30,
+                timeout=config.query.timeout,
                 limit=limit,
             )
 
