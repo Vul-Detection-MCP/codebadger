@@ -722,7 +722,8 @@ Examples:
                                     services=services,
                                 )
                             )
-                        except RuntimeError:
+                        except RuntimeError as e:
+                            logger.error(e)
                             logger.warning(f"No event loop for async restart of {codebase_hash}")
             
             return {
