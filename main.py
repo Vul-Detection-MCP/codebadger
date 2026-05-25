@@ -10,6 +10,8 @@ import logging
 import os
 import shutil
 import socket
+
+import nest_asyncio
 from fastmcp import FastMCP
 from fastmcp.server.lifespan import lifespan
 from starlette.responses import JSONResponse
@@ -35,6 +37,7 @@ services = {}
 
 logger = logging.getLogger(__name__)
 
+nest_asyncio.apply()
 
 def _setup_telemetry(config) -> None:
     """Configure OpenTelemetry SDK if telemetry is enabled.

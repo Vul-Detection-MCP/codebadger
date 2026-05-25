@@ -418,7 +418,7 @@ Notes:
 
 Examples:
     generate_cpg(
-        source_path="/app/git/libjpeg-turbo",
+        source_path="/app/input/libjpeg-turbo",
         language="cpp",
         branch="3d4b0b8510e737b74ab7453457ae673dc584fb07ea9bd47b7af555fddd7291be"
     )""",
