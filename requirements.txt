@@ -9,6 +9,7 @@ pydantic>=2.12.5
 docker==7.1.0
 gitpython==3.1.46
 PyYAML==6.0.3
+nest-asyncio==1.6.0
 
 # Telemetry (optional - OpenTelemetry)
 opentelemetry-api>=1.33.0
