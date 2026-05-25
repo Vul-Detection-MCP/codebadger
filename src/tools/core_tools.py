@@ -714,8 +714,7 @@ Examples:
                         )
 
                         try:
-                            loop = asyncio.get_running_loop()
-                            loop.create_task(
+                            asyncio.run(
                                 _restart_server_async(
                                     codebase_hash=codebase_hash,
                                     container_cpg_path=container_cpg_path,
