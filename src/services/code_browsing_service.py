@@ -190,9 +190,6 @@ class CodeBrowsingService:
                 source_path = os.path.abspath(source_path)
             source_dir = source_path
 
-        if not os.path.exists(source_dir) or not os.path.isdir(source_dir):
-            raise ValidationError(f"Source directory not found for codebase {codebase_hash}: {source_dir}")
-
         # Resolve target directory if a local_path is provided; otherwise, use source_dir
         if local_path:
             # Support both absolute and relative local_path; ensure it stays within source_dir
