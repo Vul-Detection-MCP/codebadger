@@ -401,7 +401,7 @@ Search for function calls that could be entry points for untrusted data,
 such as user input, environment variables, or network data.
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     language: Programming language (c, cpp, java, python, javascript, go, csharp, php, ruby, swift, kotlin, etc). Default: uses CPG language.
     source_patterns: Optional list of patterns for source functions (e.g., ['getenv', 'read']).
     filename: Optional regex to filter by filename (relative to project root).
@@ -426,7 +426,7 @@ Examples:
     find_taint_sources(codebase_hash="abc", source_patterns=["read_from_socket"])""",
     )
     def find_taint_sources(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         language: Annotated[Optional[str], Field(description="Programming language (c, cpp, java, python, javascript). If not provided, uses the CPG's language")] = None,
         source_patterns: Annotated[Optional[list], Field(description="Optional list of patterns to match source function names. If not provided, uses built-in defaults")] = None,
         filename: Annotated[Optional[str], Field(description="Optional filename to filter results (e.g., 'shell.c'). Uses regex matching")] = None,
@@ -442,7 +442,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Determine language and patterns
             lang = language or codebase_info.language or "c"
@@ -527,7 +527,7 @@ Search for function calls that could be security-sensitive destinations
 for data, such as system execution, file operations, or format strings.
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     language: Programming language (c, cpp, java, python, javascript, go, csharp, php, ruby, swift, kotlin, etc). Default: uses CPG language.
     sink_patterns: Optional list of regex patterns for sink functions (e.g., ['system', 'exec']).
     filename: Optional regex to filter by filename (relative to project root).
@@ -552,7 +552,7 @@ Examples:
     find_taint_sinks(codebase_hash="abc", sink_patterns=["custom_exec"])""",
     )
     def find_taint_sinks(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         language: Annotated[Optional[str], Field(description="Programming language (c, cpp, java, python, javascript, etc). If not provided, uses the CPG's language")] = None,
         sink_patterns: Annotated[Optional[list], Field(description="Optional list of regex patterns to match sink function names (e.g., ['system', 'popen', 'sprintf']). If not provided, uses default patterns")] = None,
         filename: Annotated[Optional[str], Field(description="Optional filename to filter results (e.g., 'shell.c', 'main.c'). Uses regex matching, so partial names work (e.g., 'shell' matches 'shell.c')")] = None,
@@ -568,7 +568,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             lang = language or codebase_info.language or "c"
             
@@ -666,7 +666,7 @@ MODE 2 - Auto (mode="auto"): Batch-test ALL default sources against ALL default 
   - Optionally filter by language, filename, or custom source/sink patterns.
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     mode: Set to "auto" to run batch analysis with all default sources/sinks. Omit for manual mode.
     source_location: (Manual mode) Source at 'file:line' (e.g., 'xsltproc/xsltproc.c:818').
     sink_location: (Manual mode) Sink at 'file:line' (e.g., 'libxslt/numbers.c:229').
@@ -701,7 +701,7 @@ Examples:
     find_taint_flows(codebase_hash="...", source_node_id=12345, sink_node_id=67890)""",
     )
     def find_taint_flows(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         source_location: Annotated[Optional[str], Field(description="(Manual mode) Source at 'file:line' (e.g., 'parser.c:782')")] = None,
         sink_location: Annotated[Optional[str], Field(description="(Manual mode) Sink at 'file:line' (e.g., 'parser.c:800')")] = None,
         source_node_id: Annotated[Optional[int], Field(description="(Manual mode) Node ID from find_taint_sources output")] = None,
@@ -912,7 +912,7 @@ Creates a program slice showing code that affects (backward) or is affected by (
 a specific call, including dataflow and control dependencies. Optimized for static code analysis.
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     location: 'filename:line' or 'filename:line:call_name' (file relative to project root).
     direction: 'backward' (default, what affects the call) or 'forward' (what is affected by the call).
     max_depth: Depth limit for recursive dependency tracking (default 5).
@@ -936,7 +936,7 @@ Examples:
     get_program_slice(codebase_hash="abc", location="module/file.c:100", direction="forward")""",
     )
     def get_program_slice(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         location: Annotated[str, Field(description="'filename:line' or 'filename:line:call_name'. Example: 'main.c:42' or 'main.c:42:memcpy'")],
         direction: Annotated[str, Field(description="Slice direction: 'backward' or 'forward'")] = "backward",
         max_depth: Annotated[int, Field(description="Maximum depth for recursive dependency tracking")] = 5,
@@ -957,7 +957,7 @@ Examples:
             # Verify CPG exists
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Parse location
             parts = location.split(":")
@@ -1083,7 +1083,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {
                 "location": location,
@@ -1145,7 +1145,7 @@ Filters out false positives:
 Supports free() variants: free, cfree, g_free, xmlFree, xsltFree*
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'runtest.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 300, higher due to dataflow analysis).
@@ -1163,7 +1163,7 @@ Notes:
     - Use find_taint_flows for alternative dataflow analysis approach.""",
     )
     def find_use_after_free(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 300,
@@ -1178,7 +1178,7 @@ Notes:
             # Verify CPG exists
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {
                 "filename": filename,
@@ -1236,7 +1236,7 @@ Filters out false positives:
 Supports free() variants: free, cfree, g_free, xmlFree, xsltFree*
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'parser.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 300).
@@ -1248,7 +1248,7 @@ Returns:
     - Flow type (same-ptr, alias, or [CROSS-FUNC])""",
     )
     def find_double_free(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 300,
@@ -1263,7 +1263,7 @@ Returns:
             # Verify CPG exists
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {
                 "filename": filename,
@@ -1326,7 +1326,7 @@ reallocarray, fopen, fdopen, freopen, tmpfile, popen, dlopen, mmap,
 xmlMalloc, xmlMallocAtomic, xmlRealloc, xmlStrdup, xmlStrndup
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'parser.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 300).
@@ -1344,7 +1344,7 @@ Notes:
     - Use find_taint_flows to check if allocation arguments come from external input.""",
     )
     def find_null_pointer_deref(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 300,
@@ -1359,7 +1359,7 @@ Notes:
             # Verify CPG exists
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {
                 "filename": filename,
@@ -1424,7 +1424,7 @@ Filters out false positives:
 - Array indices with preceding bounds checks
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'parser.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 300).
@@ -1442,7 +1442,7 @@ Notes:
     - Use find_taint_flows to check if arithmetic operands come from external input.""",
     )
     def find_integer_overflow(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 300,
@@ -1457,7 +1457,7 @@ Notes:
             # Verify CPG exists
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {
                 "filename": filename,
@@ -1513,7 +1513,7 @@ Functions checked: printf, vprintf, fprintf, vfprintf, dprintf, sprintf, vsprint
 snprintf, vsnprintf, syslog, vsyslog, err, errx, warn, warnx, asprintf, vasprintf
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'logger.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 120).
@@ -1529,7 +1529,7 @@ Examples:
     find_format_string_vulns(codebase_hash="abc", filename="log.c")""",
     )
     def find_format_string_vulns(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 120,
@@ -1543,7 +1543,7 @@ Examples:
 
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {"filename": filename, "limit": limit}
 
@@ -1595,7 +1595,7 @@ Filters out:
 - Writes in mutually exclusive branches from the allocation
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'net.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 240).
@@ -1610,7 +1610,7 @@ Examples:
     find_heap_overflow(codebase_hash="abc", filename="buffer.c")""",
     )
     def find_heap_overflow(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 240,
@@ -1624,7 +1624,7 @@ Examples:
 
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {"filename": filename, "limit": limit}
 
@@ -1675,7 +1675,7 @@ Filters out:
 - Writes in mutually exclusive branches from the declaration
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'parser.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 240).
@@ -1690,7 +1690,7 @@ Examples:
     find_stack_overflow(codebase_hash="abc", filename="parser.c")""",
     )
     def find_stack_overflow(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 240,
@@ -1704,7 +1704,7 @@ Examples:
 
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {"filename": filename, "limit": limit}
 
@@ -1750,7 +1750,7 @@ Analyzes the codebase for the classic TOCTOU pattern:
 Between the check and the use an attacker may replace the file or swap it for a symlink, bypassing the access-control decision made at check time.
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'fs_utils.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 240).
@@ -1768,7 +1768,7 @@ Examples:
     find_toctou(codebase_hash="abc", filename="fs_utils.c")""",
     )
     def find_toctou(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = 240,
@@ -1782,7 +1782,7 @@ Examples:
 
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {"filename": filename, "limit": limit}
 
@@ -1832,7 +1832,7 @@ Detection strategy:
    read of a variable that is never assigned
 
 Args:
-    codebase_hash: The codebase hash from generate_cpg.
+    codebase_hash: The codebase hash.
     filename: Optional filename regex to filter results (e.g., 'parser.c').
     limit: Maximum results to return (default 100).
     timeout: Query timeout in seconds (default 240).
@@ -1849,7 +1849,7 @@ Examples:
     find_uninitialized_reads(codebase_hash="abc", filename="parser.c")""",
     )
     def find_uninitialized_reads(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[Optional[str], Field(description="Optional filename regex to filter results")] = None,
         limit: Annotated[int, Field(description="Maximum results to return")] = 100,
         timeout: Annotated[int, Field(description="Query timeout in seconds")] = config.query.timeout,
@@ -1863,7 +1863,7 @@ Examples:
 
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             cache_params = {"filename": filename, "limit": limit}
 

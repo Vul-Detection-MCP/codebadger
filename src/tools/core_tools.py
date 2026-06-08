@@ -398,7 +398,7 @@ Check if the analysis for a given codebase hash is complete and the CPG is ready
 Also retrieves the connection port for the Joern server if running.
 
 Args:
-    codebase_hash: The unique hash identifier returned by generate_cpg.
+    codebase_hash: The unique hash identifier.
 
 Returns:
     {

@@ -134,7 +134,6 @@ Add the following:
 ## Available Tools
 
 ### Core
-- `generate_cpg`: Generate a Code Property Graph (CPG) for a codebase (local path or GitHub URL).
 - `get_cpg_status`: Check whether a CPG exists and retrieve status metadata.
 - `run_cpgql_query`: Execute a raw CPGQL query against a CPG and return structured results.
 - `get_cpgql_syntax_help`: Show CPGQL syntax helpers, tips, and common error fixes.
@@ -346,7 +345,3 @@ OTEL_ENABLED=true python main.py
 | `otlp_protocol` | `OTEL_EXPORTER_OTLP_PROTOCOL` | `grpc` | Export protocol (`grpc` or `http/protobuf`) |
 
 When telemetry is disabled (default), all tracing is no-op with zero overhead.
-
-
-
-

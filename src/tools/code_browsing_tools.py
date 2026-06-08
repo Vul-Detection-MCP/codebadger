@@ -55,7 +55,7 @@ Examples:
     list_methods(codebase_hash="abc", callee_pattern="memcpy")""",
     )
     def list_methods(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         name_pattern: Annotated[Optional[str], Field(description="Optional regex to filter method names (e.g., '.*authenticate.*')")] = None,
         file_pattern: Annotated[Optional[str], Field(description="Optional regex to filter by file path")] = None,
         callee_pattern: Annotated[Optional[str], Field(description="Optional regex to filter for methods that call a specific function (e.g., 'memcpy|free|malloc')")] = None,
@@ -122,7 +122,7 @@ Examples:
     list_files(codebase_hash="abc", page=2)""",
     )
     def list_files(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         local_path: Annotated[Optional[str], Field(description="Optional path inside the codebase to list (relative to source root or absolute).")] = None,
         page: Annotated[int, Field(description="Page number (1-indexed)")] = 1,
         page_size: Annotated[int, Field(description="Number of files per page (default 100)")] = 100,
@@ -187,7 +187,7 @@ Examples:
     get_method_source(codebase_hash="abc", method_name="init", filename="driver.c")""",
     )
     def get_method_source(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         method_name: Annotated[str, Field(description="Name of the method (can be regex pattern)")],
         filename: Annotated[Optional[str], Field(description="Optional filename to disambiguate methods with same name")] = None,
     ) -> Dict[str, Any]:
@@ -201,7 +201,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Build query to get method metadata
             query_parts = [f'cpg.method.name("{method_name}")']
@@ -355,7 +355,7 @@ Examples:
     list_calls(codebase_hash="abc", caller_pattern="main")""",
     )
     def list_calls(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         caller_pattern: Annotated[Optional[str], Field(description="Optional regex to filter caller method names")] = None,
         callee_pattern: Annotated[Optional[str], Field(description="Optional regex to filter callee method names")] = None,
         limit: Annotated[int, Field(description="Maximum number of results to fetch for caching")] = 1000,
@@ -427,7 +427,7 @@ Examples:
     get_call_graph(codebase_hash="abc", method_name="vuln_func", direction="incoming")""",
     )
     def get_call_graph(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         method_name: Annotated[str, Field(description="Name of the method to analyze (can be regex)")],
         depth: Annotated[int, Field(description="How many levels deep to traverse (max recommended: 10)")] = 5,
         direction: Annotated[str, Field(description="Either 'outgoing' (callees) or 'incoming' (callers)")] = "outgoing",
@@ -448,7 +448,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Load query from external file
             query = QueryLoader.load(
@@ -518,7 +518,7 @@ Examples:
     list_parameters(codebase_hash="abc", method_name="login")""",
     )
     def list_parameters(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         method_name: Annotated[str, Field(description="Name of the method (can be regex pattern)")],
     ) -> Dict[str, Any]:
         """Get parameter names, types, and order for a method."""
@@ -569,7 +569,7 @@ Examples:
     get_codebase_summary(codebase_hash="abc")""",
     )
     def get_codebase_summary(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")]
+        codebase_hash: Annotated[str, Field(description="The codebase hash")]
     ) -> Dict[str, Any]:
         """Get file count, method count, and other high-level metrics."""
         try:
@@ -581,7 +581,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Robust query to get all stats in one go
             stats_query = """
@@ -731,7 +731,7 @@ Examples:
     get_code_snippet(codebase_hash="abc", filename="main.c", start_line=10, end_line=20)""",
     )
     def get_code_snippet(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[str, Field(description="Name of the file to retrieve code from (relative to source root)")],
         start_line: Annotated[int, Field(description="Starting line number (1-indexed)")],
         end_line: Annotated[int, Field(description="Ending line number (1-indexed, inclusive)")],
@@ -750,7 +750,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Get playground path
             playground_path = os.path.abspath(
@@ -854,7 +854,7 @@ Examples:
     run_cpgql_query(codebase_hash="abc", query="cpg.method.name.l")""",
     )
     def run_cpgql_query(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         query: Annotated[str, Field(description="The CPGQL query string to execute")],
         timeout: Annotated[Optional[int], Field(description="Optional timeout in seconds")] = None,
         validate: Annotated[bool, Field(description="If true, validate query syntax before executing")] = False,
@@ -876,7 +876,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Validate query if requested
             validation_result = None
@@ -960,7 +960,7 @@ Examples:
     find_bounds_checks(codebase_hash="abc", buffer_access_location="parser.c:3393")""",
     )
     def find_bounds_checks(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         buffer_access_location: Annotated[str, Field(description="Location of buffer access in format 'filename:line' (e.g., 'parser.c:3393')")],
     ) -> str:
         """Check if buffer accesses have proper bounds validation."""
@@ -985,7 +985,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info or not codebase_info.cpg_path:
-                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Generate it first using generate_cpg.")
+                raise ValidationError(f"CPG not found for codebase {codebase_hash}. Please try again.")
 
             # Load query from external file
             query = QueryLoader.load(
@@ -1162,7 +1162,7 @@ Examples:
     get_cfg(codebase_hash="abc", method_name="main")""",
     )
     def get_cfg(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         method_name: Annotated[str, Field(description="Name of the method (can be regex pattern)")],
         max_nodes: Annotated[int, Field(description="Maximum CFG nodes to return (for large methods)")] = 100,
     ) -> str:
@@ -1241,7 +1241,7 @@ Examples:
     get_type_definition(codebase_hash="abc", type_name=".*request_t.*")""",
     )
     def get_type_definition(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         type_name: Annotated[str, Field(description="Type name pattern (regex, e.g., '.*Buffer.*')")],
         limit: Annotated[int, Field(description="Maximum types to return")] = 10,
     ) -> Dict[str, Any]:
@@ -1335,7 +1335,7 @@ Examples:
     get_macro_expansion(codebase_hash="abc", filename="main.c", line_number=42)""",
     )
     def get_macro_expansion(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         filename: Annotated[str, Field(description="Filename to search (partial match)")],
         line_number: Annotated[Optional[int], Field(description="Optional line number to filter")] = None,
     ) -> Dict[str, Any]:
@@ -1487,7 +1487,7 @@ Examples:
     discover_fixed_vulnerabilities(codebase_hash="abc", limit=100)""",
     )
     def discover_fixed_vulnerabilities(
-        codebase_hash: Annotated[str, Field(description="The codebase hash from generate_cpg")],
+        codebase_hash: Annotated[str, Field(description="The codebase hash")],
         limit: Annotated[int, Field(description="Maximum number of commits to analyze")] = 500,
         patterns: Annotated[Optional[list], Field(description="Optional list of custom regex patterns to match")] = None,
     ) -> str:
@@ -1502,7 +1502,7 @@ Examples:
             # Verify CPG exists for this codebase
             codebase_info = codebase_tracker.get_codebase(codebase_hash)
             if not codebase_info:
-                raise ValidationError(f"Codebase {codebase_hash} not found. Generate it first using generate_cpg.")
+                raise ValidationError(f"Codebase {codebase_hash} not found. Please try again.")
 
             # Get source directory
             playground_path = os.path.abspath(
