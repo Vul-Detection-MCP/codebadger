@@ -14,6 +14,7 @@ import socket
 import nest_asyncio
 from fastmcp import FastMCP
 from fastmcp.server.lifespan import lifespan
+from fastmcp.server.middleware import Middleware, MiddlewareContext
 from starlette.responses import JSONResponse
 
 from src.config import load_config
@@ -400,6 +401,11 @@ async def root(request):
         }
     })
 
+class ToolLoggingMiddleware(Middleware):
+    async def on_call_tool(self, context: MiddlewareContext, call_next):
+        print(f"Tool call: {context.message.name}")
+        return await call_next(context)
+
 
 if __name__ == "__main__":
     # Run the server with HTTP transport (Streamable HTTP)
@@ -407,10 +413,12 @@ if __name__ == "__main__":
     config_data = load_config("config.yaml")
     host = config_data.server.host
     port = config_data.server.port
-    
+
     logger.info(f"Starting CodeBadger Server with HTTP transport on {host}:{port}")
-    
+
     # Use HTTP transport (Streamable HTTP) for production deployment
     # This enables network accessibility, multiple concurrent clients,
     # and integration with web infrastructure
+    mcp = FastMCP("Codebadger")
+    mcp.add_middleware(ToolLoggingMiddleware())
     mcp.run(transport="http", host=host, port=port)
