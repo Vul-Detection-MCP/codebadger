@@ -419,6 +419,5 @@ if __name__ == "__main__":
     # Use HTTP transport (Streamable HTTP) for production deployment
     # This enables network accessibility, multiple concurrent clients,
     # and integration with web infrastructure
-    mcp = FastMCP("Codebadger")
     mcp.add_middleware(ToolLoggingMiddleware())
     mcp.run(transport="http", host=host, port=port)
