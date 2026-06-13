@@ -23,4 +23,4 @@ def register_tools(mcp, services: dict):
     register_taint_analysis_tools(mcp, services)
 
     # Register pre-built analysis prompts
-    register_prompts(mcp)
+    # register_prompts(mcp)
